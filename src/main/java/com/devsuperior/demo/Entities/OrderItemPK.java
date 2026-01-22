@@ -1,4 +1,4 @@
-package com.devsuperior.demo.Entities;
+package com.devsuperior.demo.entities;
 
 
 import jakarta.persistence.Embeddable;
