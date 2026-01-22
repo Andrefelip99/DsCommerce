@@ -1,5 +1,7 @@
 package com.devsuperior.demo.dto;
 
+import com.devsuperior.demo.entities.Product;
+
 public class ProductDTO {
    
     private Long id;
@@ -20,6 +22,17 @@ public class ProductDTO {
         this.price = price;
         this.imgUrl = imgUrl;
     }
+
+
+     public ProductDTO(Product entity) {
+        id = entity.getId();
+        name = entity.getName();
+        description = entity.getDescription();
+        price = entity.getPrice();
+        imgUrl = entity.getImgUrl();
+    }
+
+    
     public Long getId() {
         return id;
     }
