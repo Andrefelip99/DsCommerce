@@ -1,15 +1,20 @@
 package com.devsuperior.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.demo.dto.ProductDTO;
 import com.devsuperior.demo.entities.Product;
 import com.devsuperior.demo.repository.ProductRepository;
+import com.devsuperior.demo.services.exeptions.DataBaseExeption;
 import com.devsuperior.demo.services.exeptions.ResourceNotFouldExeption;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService {
@@ -17,7 +22,8 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    // Aqui eu estou buscando o produto por id e lancando uma exceção para caso ele não exista //
+    // Aqui eu estou buscando o produto por id e lancando uma exceção para caso ele
+    // não exista //
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Product product = repository.findById(id).orElseThrow(
@@ -27,15 +33,16 @@ public class ProductService {
                 product.getImgUrl());
 
     }
-    
-    //Aqui eu estou Buscando pelos produtos//
+
+    // Aqui eu estou Buscando pelos produtos//
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         Page<Product> result = repository.findAll(pageable);
         return result.map(x -> new ProductDTO(x));
 
     }
-    //Aqui eu estou inserindo novos produtos//
+
+    // Aqui eu estou inserindo novos produtos//
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
@@ -44,22 +51,37 @@ public class ProductService {
         return new ProductDTO(entity);
 
     }
-    //Aqui estou atualizando os produtos já inseridos//
+
+    // Aqui estou atualizando os produtos já inseridos//
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
-        Product entity = repository.getReferenceById(id);
-        copyDtoEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ProductDTO(entity);
+        try {
+            Product entity = repository.getReferenceById(id);
+            copyDtoEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ProductDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFouldExeption("Recurso não encontrado!");
+        }
 
     }
-    //Aqui eu estou deletando produtos existentes//
-    @Transactional
+
+    // Aqui eu estou deletando produtos existentes//
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        repository.deleteById(id);
-
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFouldExeption("Recurso não encontrado!");
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseExeption("Falha de integridade referencial");
+        }
     }
-    //Aqui eu criei um metodo para minimizar a escrita do (insert e update)//
+
+    
+
+    // Aqui eu criei um metodo para minimizar a escrita do (insert e update)//
     private void copyDtoEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
@@ -67,5 +89,4 @@ public class ProductService {
         entity.setImgUrl(dto.getImgUrl());
 
     }
-
 }

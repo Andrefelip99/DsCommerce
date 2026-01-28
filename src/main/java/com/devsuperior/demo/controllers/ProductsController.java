@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsuperior.demo.dto.ProductDTO;
 import com.devsuperior.demo.services.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/products")
 public class ProductsController {
@@ -29,8 +31,10 @@ public class ProductsController {
     // Aqui eu estou Buscando por id//
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findyById(@PathVariable Long id) {
-        ProductDTO dto = service.findById(id);
+         ProductDTO dto = service.findById(id);
         return ResponseEntity.ok(dto);
+
+
     }
 
     // Aqui eu estou buscando uma lista de produtos por paginação//
@@ -42,7 +46,7 @@ public class ProductsController {
 
     // Aqui eu estou inserindo um novo produto//
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
@@ -50,7 +54,7 @@ public class ProductsController {
 
     // Aqui eu estou Atualizando um produto ja existente//
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id,@Valid @RequestBody ProductDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
