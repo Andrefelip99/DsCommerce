@@ -3,19 +3,22 @@ package com.devsuperior.demo.dto;
 import com.devsuperior.demo.entities.Product;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.Setter;
 
-
+@Setter
 public class ProductDTO {
    
     private Long id;
     @Size(min = 3,max = 80, message = "Nome precisa ter de 3 a 80 caracteres")
     @NotBlank(message = "Campo Requerido")
     private String name;
-    @Size(min = 10, message =  "Descrição precisa ter no minimo 10 caracteres ")
     @NotBlank
+    @Size(min = 10, message = "Descrição precisa ter no minimo 10 caracteres")
     private String description;
+    @NotNull(message = "Preço é obrigatório")
     @Positive(message = "O preço deve ser positivo")
     private Double price;
     private String imgUrl;

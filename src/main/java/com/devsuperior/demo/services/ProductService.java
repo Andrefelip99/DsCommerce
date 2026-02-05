@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsuperior.demo.dto.ProductDTO;
 import com.devsuperior.demo.entities.Product;
 import com.devsuperior.demo.repository.ProductRepository;
-import com.devsuperior.demo.services.exeptions.DataBaseExeption;
-import com.devsuperior.demo.services.exeptions.ResourceNotFouldExeption;
+import com.devsuperior.demo.services.exeptions.DatabaseException;
+import com.devsuperior.demo.services.exeptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -22,71 +22,59 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    // Aqui eu estou buscando o produto por id e lancando uma exceção para caso ele
-    // não exista //
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Product product = repository.findById(id).orElseThrow(
-                () -> new ResourceNotFouldExeption("Recurso não encontrado"));
-        return new ProductDTO(product.getId(), product.getName(), product.getDescription(),
-                product.getPrice(),
-                product.getImgUrl());
-
+        Product entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+        return new ProductDTO(entity);
     }
 
-    // Aqui eu estou Buscando pelos produtos//
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         Page<Product> result = repository.findAll(pageable);
-        return result.map(x -> new ProductDTO(x));
-
+        return result.map(ProductDTO::new);
     }
 
-    // Aqui eu estou inserindo novos produtos//
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
-        copyDtoEntity(dto, entity);
+        copyDtoToEntity(dto, entity);
         entity = repository.save(entity);
         return new ProductDTO(entity);
-
     }
 
-    // Aqui estou atualizando os produtos já inseridos//
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
-        try {
-            Product entity = repository.getReferenceById(id);
-            copyDtoEntity(dto, entity);
-            entity = repository.save(entity);
-            return new ProductDTO(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFouldExeption("Recurso não encontrado!");
-        }
-
+       System.out.println("CHEGOU NO SERVICE");
+       try{ Product entity = repository.getReferenceById(id);
+        copyDtoToEntity(dto, entity);
+        entity = repository.save(entity);
+        return new ProductDTO(entity);
     }
+         catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Recurso não encontrado");
+           
+    }
+}
 
-    // Aqui eu estou deletando produtos existentes//
     @Transactional(propagation = Propagation.SUPPORTS)
-    public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFouldExeption("Recurso não encontrado!");
-        }
-        try {
-            repository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DataBaseExeption("Falha de integridade referencial");
-        }
-    }
+public void delete(Long id) {
+	if (!repository.existsById(id)) {
+		throw new ResourceNotFoundException("Recurso não encontrado");
+	}
+	try {
+        	repository.deleteById(id);    		
+	}
+    	catch (DataIntegrityViolationException e) {
+        	throw new DatabaseException("Falha de integridade referencial");
+   	}
+}
 
-    
-
-    // Aqui eu criei um metodo para minimizar a escrita do (insert e update)//
-    private void copyDtoEntity(ProductDTO dto, Product entity) {
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
-
     }
 }
+
