@@ -22,7 +22,6 @@ public class CustomError {
         return timeStamp;
     }
 
-
     public Integer getStatus() {
         return status;
     }
