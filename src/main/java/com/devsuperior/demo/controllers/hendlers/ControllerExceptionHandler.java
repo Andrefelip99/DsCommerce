@@ -30,7 +30,7 @@ public class ControllerExceptionHandler {
             DatabaseException e,
             HttpServletRequest request) {
 
-        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         CustomError err = new CustomError(
                 Instant.now(),
