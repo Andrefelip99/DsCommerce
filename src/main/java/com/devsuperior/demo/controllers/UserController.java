@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devsuperior.demo.dto.UserDto;
+import com.devsuperior.demo.dto.UserDTO;
 import com.devsuperior.demo.services.UserService;
 
 @RestController
@@ -20,8 +20,8 @@ public class UserController {
     // Aqui eu estou Buscando por id//
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')") // Somente o admin pode acessar os dados do usuario//
     @GetMapping(value = "/me")
-    public ResponseEntity<UserDto> getMe() {
-        UserDto dto = service.getMe();
+    public ResponseEntity<UserDTO> getMe() {
+        UserDTO dto = service.getMe();
         return ResponseEntity.ok(dto);
 
     }

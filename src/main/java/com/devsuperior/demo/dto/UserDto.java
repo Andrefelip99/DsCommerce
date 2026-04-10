@@ -11,7 +11,7 @@ import com.devsuperior.demo.entities.User;
 import lombok.Getter;
 
 @Getter
-public class UserDto {
+public class UserDTO {
 
     private Long id;
     private String name;
@@ -21,7 +21,7 @@ public class UserDto {
 
     private List<String> roles = new ArrayList<>();
 
-    public UserDto(User entity) {
+    public UserDTO(User entity) {
         id = entity.getId();
         name = entity.getName();
         email = entity.getEmail();

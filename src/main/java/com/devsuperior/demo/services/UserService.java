@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import com.devsuperior.demo.dto.UserDto;
+import com.devsuperior.demo.dto.UserDTO;
 import com.devsuperior.demo.entities.Role;
 import com.devsuperior.demo.entities.User;
 import com.devsuperior.demo.projections.UserDetailsProjection;
@@ -56,8 +56,8 @@ public class UserService implements UserDetailsService {
 
 	}
     @Transactional
-	public UserDto getMe(){
+	public UserDTO getMe(){
 		User user = authenticated();
-		return new UserDto(user);
+		return new UserDTO(user);
 	}
 }
