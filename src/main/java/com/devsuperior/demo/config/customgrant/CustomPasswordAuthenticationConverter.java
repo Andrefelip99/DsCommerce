@@ -41,9 +41,9 @@ public class CustomPasswordAuthenticationConverter implements AuthenticationConv
 		}
 		
 		// username (REQUIRED)
-		String username = parameters.getFirst(OAuth2ParameterNames.USER_CODE);
+		String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
 		if (!StringUtils.hasText(username) ||
-				parameters.get(OAuth2ParameterNames.USER_CODE).size() != 1) {
+				parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 		
