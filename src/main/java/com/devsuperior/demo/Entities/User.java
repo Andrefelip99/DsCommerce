@@ -1,5 +1,6 @@
 package com.devsuperior.demo.entities;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,5 +103,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
       return email;
+    }
+
+    public Instant getMoment() {
+      
+        throw new UnsupportedOperationException("Unimplemented method 'getMoment'");
     }
 }
