@@ -26,6 +26,10 @@ public class OrderItemDTO {
         quantity = entity.getQuantity();
     }
 
+    public OrderItemDTO() {
+        
+    }
+
     public double getSubTotal() {
         return price * quantity;
     }

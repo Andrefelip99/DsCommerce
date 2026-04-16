@@ -8,6 +8,7 @@ import com.devsuperior.demo.entities.Order;
 import com.devsuperior.demo.entities.OrderItem;
 import com.devsuperior.demo.entities.OrderStatus;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Getter
@@ -18,7 +19,7 @@ public class OrderDTO {
 
     private ClientDTO client;
     private PaymentDTO payment;
-
+    @NotEmpty(message = "A ordem deve conter pelo menos um item")
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO(Long id, Instant moment, OrderStatus status, ClientDTO client, PaymentDTO payment) {
@@ -27,6 +28,10 @@ public class OrderDTO {
         this.status = status;
         this.client = client;
         this.payment = payment;
+    }
+
+    public OrderDTO() {
+        
     }
 
       public OrderDTO(Order entity) {
