@@ -26,7 +26,7 @@ public class OrderController {
     private OrderService service;
 
     // Aqui eu estou Buscando por id//
-   @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // Somente Admin e Operator podem acessar esse endpoint
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')") // Somente Admin e Operator podem acessar esse endpoint
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrderDTO> findyById(@PathVariable Long id) {
         OrderDTO dto = service.findById(id);

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.devsuperior.demo.dto.CustomError;
 import com.devsuperior.demo.dto.ValidationError;
 import com.devsuperior.demo.services.exeptions.DatabaseException;
+import com.devsuperior.demo.services.exeptions.ForbiddenException;
 import com.devsuperior.demo.services.exeptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,6 +49,13 @@ public class ControllerExceptionHandler {
                 request.getRequestURI(), null);
         err.addError("name", "Mensagem de teste");
         err.addError("price", "Preço invalido");
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomError> forbidden(ForbiddenException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
