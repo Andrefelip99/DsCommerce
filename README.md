@@ -180,6 +180,6 @@ Projeto desenvolvido durante o curso Java Spring Professional da DevSuperior, mi
 
 ## 👨‍💻 Autor
 
-André Felipe da Silva Leal
+André Felipe
 
 Estudante de Análise e Desenvolvimento de Sistemas e desenvolvedor Back-End com foco em Java e Spring Boot.
